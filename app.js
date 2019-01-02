@@ -46,6 +46,9 @@ app.use(bodyParser.json());
 // reference: https://stackoverflow.com/questions/27227650/difference-between-app-use-and-router-use-in-express
 app.use('/api/books', bookRouter);        
 
+// for authors, a new route can be created as follows:
+app.use('/api/authors', authorRoutes);
+
 // req: the request which is received by the API
 // res: the response that we are going to send back
 // These are the parameters for our callback function below
