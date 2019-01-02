@@ -22,7 +22,18 @@ var app = express();
 
 // create a connection to the database by giving the connection string as the parameter
 // if the bookAPI database doesn't exist, it will create that for us.
-var db = mongoose.connect('mongodb://localhost/bookAPI');
+var db;
+
+if (process.env.ENV == 'Test')
+{
+    // connect to test database
+    db = mongoose.connect('mongodb://localhost/bookAPI_test');
+}
+else
+{
+    db = mongoose.connect('mongodb://localhost/bookAPI');
+}
+
 
 // designate a port either from the environment or assign a default port of 3000
 var port = process.env.PORT || 3000;
@@ -48,3 +59,5 @@ app.listen(port , function()
 {
     console.log("Running on PORT: " + port); 
 });
+
+module.exports = app;
