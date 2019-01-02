@@ -1,47 +1,17 @@
 var express = require('express');
 
-// create a reference for the controllers
-var bookController = require('../controllers/bookController');
-
 var routes = function(Book)
 {
+    // create a reference for the controllers
+    var bookController = require('../controllers/bookController')(Book);
+
     // Set up the routes of the API by creating a router
     var bookRouter = express.Router();
 
     // define a route for the GET endpoint
     bookRouter.route('/')
-    .post(function(req, res)
-        {
-            // _id is generated automatically for each new book as part of the Book Mongo Schema
-            var book = new Book(req.body);
-            
-            // save book in database
-            book.save();
-            res.status(201).send(book);
-        })
-    .get(function(req, res)
-        {
-            var query = {};
-
-            // check if the query is valid for filtering genres
-            if (req.query.genre)
-            {
-                query.genre = req.query.genre;
-            } 
-            // filter according to a query in the request
-            Book.find(query, function(err, books)
-            {
-                if (err)
-                {
-                    // send back response code with error in case of error
-                    res.status(500).send(err);
-                }
-                else
-                {
-                    res.json(books);
-                }
-            })
-        });
+    .post(bookController.post)
+    .get(bookController.get);
     
     // create a middleware to get book by ID and then pass the result to the endpoints
     bookRouter.use('/:id', function(req, res, next)

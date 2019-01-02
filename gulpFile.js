@@ -1,5 +1,8 @@
 var gulp = require('gulp');
 var nodemon = require('gulp-nodemon');
+var gulpMocha = require('gulp-mocha');
+var env = require('gulp-env');
+var supertest = require('supertest');
 
 // Gulp requires the name of a task which is needed to be run. 
 // For this, we will create a function to run the nodemon task.
@@ -25,4 +28,20 @@ gulp.task('default', function()
             {
                 console.log("Restarting...");
             });
+});
+
+// Create a task for testing with gulp mocha
+gulp.task('test', function()
+{
+    // here we define the enviornment which is then governed by our gulp execution.
+    // this is done in app.js by connecting to the specific DB
+    env({
+        vars: {
+            ENV: 'TEST'
+        }
+    })
+
+    // get all the files in the test directory and pipe them down to gulp mocha
+    gulp.src('Tests/*.js', {read: false})
+    .pipe(gulpMocha({reporter: 'nyan'}))
 });
